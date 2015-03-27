@@ -37,6 +37,7 @@ create table tokens
     status enum('empty', 'assigned', 'canceled by doctor', 'finished'),
     doctor_location_id integer default null,
     patient_id integer default null,
+    booking_reason varchar(250) default null,
     foreign key (doctor_location_id) references doctor_locations (id),
     foreign key (patient_id) references patients (id)
 )
