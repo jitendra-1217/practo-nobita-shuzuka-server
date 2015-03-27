@@ -23,7 +23,9 @@ LOCK TABLES `doctor_locations` WRITE;
 /*!40000 ALTER TABLE `doctor_locations` DISABLE KEYS */;
 INSERT INTO `doctor_locations` VALUES
 (1,2,'jp morgan','marathahalli','bangalore','india',12.9422240,77.6966860),
-(2,2,'marathahalli bridge','marathahalli','bangalore','india',12.9569470,77.7015350);
+(2,1,'marathahalli bridge','marathahalli','bangalore','india',12.9569470,77.7015350),
+(3,4,'new horizon college','ngef layout','bangalore','india',13.0054960,77.6607660),
+(4,3,'eco space tech park','sarjapur nagar','bangalore','india',12.9275490,77.6795730);
 /*!40000 ALTER TABLE `doctor_locations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -35,7 +37,9 @@ LOCK TABLES `doctors` WRITE;
 /*!40000 ALTER TABLE `doctors` DISABLE KEYS */;
 INSERT INTO `doctors` VALUES
 (1,'dr. jitendra ojha','+917277379845',10),
-(2,'er. dinesh swami','+919931864792',15);
+(2,'er. dinesh swami','+919931864792',15),
+(3,'dr. manoj hans','+911234567890',5),
+(4,'dr. saikat mitra','+911234567890',20);
 /*!40000 ALTER TABLE `doctors` ENABLE KEYS */;
 UNLOCK TABLES;
 
