@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, Flask
 doctor_api_bp = Blueprint('doctor_api',__name__,template_folder='templates')
 
 app = Flask(__name__)
-app.config.from_envvar('NOALPHA_SETTINGS')
+app.config.from_pyfile('flaskapp.cfg')
 
 @doctor_api_bp.route('/')
 def index():
