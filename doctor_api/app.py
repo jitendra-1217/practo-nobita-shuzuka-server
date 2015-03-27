@@ -35,3 +35,12 @@ def updateToken():
     cursor.execute('update tokens set status = "%s" where id = "%d"' % (request.form['status'], int(request.form['id'])))
     conn.commit()
     return jsonify(message='success')
+
+@doctor_api_bp.route('/list-tokens', methods=['POST'])
+def listTokens():
+    cursor.execute('select t.id, t.serial_no, t.start_time, t.status, p.id, p.name, p.phone_no from tokens t left join patients p on t.patient_id = p.id where doctor_location_id = "%d" and token_timestamp = "%s"' % (int(request.form['doctor_location_id']), request.form['token_timestamp']))
+    results = cursor.fetchall()
+    resultsToReturn = []
+    for result in results:
+        resultsToReturn.append({'token_id':result[1], 'token_serial_no':result[1], 'token_start_time':str(result[2]), 'token_status':result[3], 'patient_id':result[4], 'patient_name':result[5], 'patient_phone_no':result[6]})
+    return jsonify(message=resultsToReturn)
