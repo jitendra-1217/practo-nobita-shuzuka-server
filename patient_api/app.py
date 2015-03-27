@@ -23,4 +23,16 @@ def aquireToken():
     id = str(data[0])
     cursor.execute('update tokens set patient_id = "%d", status = "assigned" where id = "%d"' % (int(request.form['patient_id']), int(id)))
     conn.commit()
-    return jsonify(status='success')
+    return jsonify(status='success', token_id=id)
+
+@patient_api_bp.route('/list-doctor-locations', methods=['GET'])
+def listDoctorLocations():
+    pass
+
+@patient_api_bp.route('/details-of-doctor-location', methods=['GET'])
+def detailsOfDoctorLocation():
+    pass
+
+@patient_api_bp.route('/status-of-token')
+def statusOfToken():
+    pass
