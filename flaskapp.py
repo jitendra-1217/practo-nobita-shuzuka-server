@@ -24,4 +24,4 @@ def test():
     return "<strong>It's Alive!</strong>"
 
 if __name__ == '__main__':
-    app.run(app.config['IP'], app.config['PORT'], debug=True)
+    app.run(app.config['IP'], app.config['PORT'])
