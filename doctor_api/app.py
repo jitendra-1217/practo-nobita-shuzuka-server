@@ -25,7 +25,7 @@ def putTokens():
     avgCheckupTimeInMin = str(data[0])
     startTime = request.form['start_time']
     for serialNo in range(1, int(request.form['no_of_tokens']) + 1):
-        cursor.execute('insert into tokens (serial_no, start_time, status, doctor_location_id) values ("%d", "%s", "empty", "%d")' % (serialNo, startTime, int(request.form['doctor_location_id'])))
+        cursor.execute('insert into tokens (serial_no, token_timestamp, start_time, status, doctor_location_id) values ("%d", "%s", "%s", "empty", "%d")' % (serialNo, request.form['token_timestamp'], startTime, int(request.form['doctor_location_id'])))
         startTime = (datetime.datetime.strptime(startTime, "%H:%M:%S") + datetime.timedelta(minutes = int(avgCheckupTimeInMin))).strftime("%H:%M:%S")
     con.commit()
     return jsonify(message='success')
