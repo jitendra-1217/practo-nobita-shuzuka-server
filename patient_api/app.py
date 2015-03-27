@@ -27,7 +27,12 @@ def aquireToken():
 
 @patient_api_bp.route('/list-doctor-locations', methods=['GET'])
 def listDoctorLocations():
-    pass
+    cursor.execute('select id, latitude, longitude from doctor_locations where id in (select doctor_location_id from tokens where token_timestamp = "%s" group by doctor_location_id)' % (request.args.get('token_timestamp')))
+    results = cursor.fetchall()
+    resultsToReturn = []
+    for result in results:
+        resultsToReturn.append({'id':result[0], 'latitude':str(result[1]), 'longitude':str(result[2])})
+    return jsonify(status='success',message=resultsToReturn)
 
 @patient_api_bp.route('/details-of-doctor-location', methods=['GET'])
 def detailsOfDoctorLocation():
