@@ -36,7 +36,16 @@ def listDoctorLocations():
 
 @patient_api_bp.route('/details-of-doctor-location', methods=['GET'])
 def detailsOfDoctorLocation():
-    pass
+    cursor.execute('select d.id, d.name, d.phone_no, d.avg_checkup_time, dl.landmark, dl.locality, dl.city, dl.country, dl.latitude, dl.longitude from doctors d right join doctor_locations dl on d.id = dl.doctor_id where dl.id = "%d"' % (int(request.args.get('doctor_location_id'))))
+    result = cursor.fetchone()
+    resultsToReturn = []
+    doctorLocationAddress = []
+    for index in range(4,8):
+        if result[index] is not None:
+            doctorLocationAddress.append(result[index])
+    doctorLocationAddress = ','.join(doctorLocationAddress)
+    resultsToReturn.append({'doctor_id':result[0], 'doctor_name':result[1], 'doctor_phone_no':result[2], 'doctor_avg_checkup_time':result[3], 'address':doctorLocationAddress, 'doctor_location_latitude': str(result[8]), 'doctor_location_longitude': str(result[9])})
+    return jsonify(status='success',message=resultsToReturn)
 
 @patient_api_bp.route('/status-of-token')
 def statusOfToken():
