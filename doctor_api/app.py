@@ -22,13 +22,18 @@ def testConfig():
 def putTokens():
     cursor.execute('select avg_checkup_time from doctors where id in (select doctor_id from doctor_locations where id = "%d")' % (int(request.form['doctor_location_id'])))
     data = cursor.fetchone()
-    avgCheckupTimeInMin = str(data[0])
-    startTime = request.form['start_time']
-    for serialNo in range(1, int(request.form['no_of_tokens']) + 1):
-        cursor.execute('insert into tokens (serial_no, token_timestamp, start_time, status, doctor_location_id) values ("%d", "%s", "%s", "empty", "%d")' % (serialNo, request.form['token_timestamp'], startTime, int(request.form['doctor_location_id'])))
-        startTime = (datetime.datetime.strptime(startTime, "%H:%M:%S") + datetime.timedelta(minutes = int(avgCheckupTimeInMin))).strftime("%H:%M:%S")
-    conn.commit()
-    return jsonify(status='success')
+    cursor.execute('select * from tokens where token_timestamp = "%s" and doctor_location_id = "%d"' % (request.form['token_timestamp'], int(request.form['doctor_location_id'])))
+    datatokens = cursor.fetchone()
+    if not datatokens:
+        avgCheckupTimeInMin = str(data[0])
+        startTime = request.form['start_time']
+        for serialNo in range(1, int(request.form['no_of_tokens']) + 1):
+            cursor.execute('insert into tokens (serial_no, token_timestamp, start_time, status, doctor_location_id) values ("%d", "%s", "%s", "empty", "%d")' % (serialNo, request.form['token_timestamp'], startTime, int(request.form['doctor_location_id'])))
+            startTime = (datetime.datetime.strptime(startTime, "%H:%M:%S") + datetime.timedelta(minutes = int(avgCheckupTimeInMin))).strftime("%H:%M:%S")
+        conn.commit()
+        return jsonify(status='success')
+    else:
+        return jsonify(status='duplicate')
 
 @doctor_api_bp.route('/update-token', methods=['POST'])
 def updateToken():
