@@ -14,16 +14,17 @@ cursor = conn.cursor()
 def index():
     return jsonify(message='Welcome to patient_api\'s index page.')
 
-@patient_api_bp.route('/aquire-token', methods=['POST'])
+@patient_api_bp.route('/acquire-token', methods=['POST'])
 def aquireToken():
-    cursor.execute('select id from tokens where doctor_location_id = "%d" and status = "empty" limit 1' % (int(request.form['doctor_location_id'])))
+    cursor.execute('select id, serial_no from tokens where doctor_location_id = "%d" and status = "empty" limit 1' % (int(request.form['doctor_location_id'])))
     data = cursor.fetchone()
     if data is None:
         return jsonify(status='failed')
     id = str(data[0])
+    tokenSerialNo = str(data[1])
     cursor.execute('update tokens set patient_id = "%d", status = "assigned" where id = "%d"' % (int(request.form['patient_id']), int(id)))
     conn.commit()
-    return jsonify(status='success', token_id=id)
+    return jsonify(status='success', token_id=id, tkoen_serial_no=tokenSerialNo)
 
 @patient_api_bp.route('/list-doctor-locations', methods=['GET'])
 def listDoctorLocations():
