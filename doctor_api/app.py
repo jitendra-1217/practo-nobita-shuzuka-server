@@ -52,7 +52,7 @@ def listTokens():
 
 @doctor_api_bp.route('/remain-tokens', methods=['POST'])
 def remainTokens():
-    cursor.execute('select t.id, t.serial_no, t.start_time, t.status, dl.latitude, dl.longitude, d.name from tokens t left join doctor_locations dl left join doctors d on t.doctor_location_id = dl.id and d.id = dl.doctor_id where doctor_location_id = "%d" and token_timestamp = "%s" and t.status = "empty"' % (int(request.form['doctor_location_id']), request.form['token_timestamp']))
+    cursor.execute('select t.id, t.serial_no, t.start_time, t.status, dl.latitude, dl.longitude, d.name from tokens t left join doctor_locations dl d on t.doctor_location_id = dl.id left join doctors on d.id = dl.doctor_id where doctor_location_id = "%d" and token_timestamp = "%s" and t.status = "empty"' % (int(request.form['doctor_location_id']), request.form['token_timestamp']))
     results = cursor.fetchall()
     resultsToReturn = []
     for result in results:
