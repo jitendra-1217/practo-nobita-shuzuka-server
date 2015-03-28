@@ -52,9 +52,9 @@ def listTokens():
 
 @doctor_api_bp.route('/remain-tokens', methods=['POST'])
 def remainTokens():
-    cursor.execute('select t.id, t.serial_no, t.start_time, t.status, p.id, p.name, p.phone_no, t.booking_reason from tokens t left join patients p on t.patient_id = p.id where doctor_location_id = "%d" and token_timestamp = "%s" and t.status = "empty"' % (int(request.form['doctor_location_id']), request.form['token_timestamp']))
+    cursor.execute('select t.id, t.serial_no, t.start_time, t.status, dl.latitude, dl.longitude, d.name from tokens t left join doctor_locations dl left join doctors d on t.doctor_location_id = dl.id and d.id = dl.doctor_id where doctor_location_id = "%d" and token_timestamp = "%s" and t.status = "empty"' % (int(request.form['doctor_location_id']), request.form['token_timestamp']))
     results = cursor.fetchall()
     resultsToReturn = []
     for result in results:
-        resultsToReturn.append({'token_id':result[1], 'token_serial_no':result[1], 'token_start_time':str(result[2]), 'token_status':result[3], 'patient_id':result[4], 'patient_name':result[5], 'patient_phone_no':result[6], 'booking_reason':result[7]})
+        resultsToReturn.append({'token_id':result[1], 'token_serial_no':result[1], 'token_start_time':str(result[2]), 'token_status':result[3], 'doctor_lat':result[4], 'doctor_long':result[5], 'doctor_name':result[6]})
     return jsonify(status='success',message=resultsToReturn)
