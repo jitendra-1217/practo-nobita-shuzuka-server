@@ -57,7 +57,7 @@ def statusOfToken():
     serialNo = str(result[0])
     tokenTimestamp = str(result[1])
     doctorLocationId = str(result[2])
-    cursor.execute('select count(*) from tokens where token_timestamp = "%s" and doctor_location_id = "%d" and serial_no < "%d" and status in ("assigned", "canceled by doctor")' % (tokenTimestamp, int(doctorLocationId), int(serialNo)))
+    cursor.execute('select count(*) from tokens where token_timestamp = "%s" and doctor_location_id = "%d" and serial_no < "%d" and status not in ("assigned", "canceled by doctor")' % (tokenTimestamp, int(doctorLocationId), int(serialNo)))
     result = cursor.fetchone()
     beforeYou = str(result[0])
     resultsToReturn = {'before_you':beforeYou, 'expected_time':(datetime.datetime.now() + datetime.timedelta(minutes = 5*int(beforeYou))).strftime("%H:%M:%S")}
