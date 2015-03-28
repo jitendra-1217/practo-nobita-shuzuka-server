@@ -50,6 +50,15 @@ def detailsOfDoctorLocation():
     resultsToReturn = {'doctor_id':result[0], 'doctor_name':result[1], 'doctor_phone_no':result[2], 'doctor_avg_checkup_time':result[3], 'address':doctorLocationAddress, 'doctor_location_latitude': str(result[8]), 'doctor_location_longitude': str(result[9]), 'total_token_count': totalTokenCount, 'empty_token_count': emptyTokenCount}
     return jsonify(status='success',message=resultsToReturn)
 
-@patient_api_bp.route('/status-of-token', methods=['GET'])
+@patient_api_bp.route('/status-of-token', methods=['POST'])
 def statusOfToken():
-    pass
+    cursor.execute('select serial_no, token_timestamp, doctor_location_id from tokens where id = "%d"' % (int(request.form['id'])))
+    result = cursor.fetchone()
+    serialNo = str(result[0])
+    tokenTimestamp = str(result[1])
+    doctorLocationId = str(result[2])
+    cursor.execute('select count(*) from tokens where token_timestamp = "%s" and doctor_location_id = "%d" and serial_no < "%d" and status in ("assigned", "canceled by doctor")' % (tokenTimestamp, int(doctorLocationId), int(serialNo)))
+    result = cursor.fetchone()
+    beforeYou = str(result[0])
+    resultsToReturn = {'before_you':beforeYou, 'expected_time':(datetime.datetime.now() + datetime.timedelta(minutes = 5*int(beforeYou))).strftime("%H:%M:%S")}
+    return jsonify(status='success',message=resultsToReturn)
