@@ -29,8 +29,6 @@ def aquireToken():
 @patient_api_bp.route('/list-doctor-locations', methods=['GET'])
 def listDoctorLocations():
     cursor.execute('select id, latitude, longitude from doctor_locations where id in (select doctor_location_id from tokens group by doctor_location_id)')
-    import sys
-    sys.stdout.write('select id, latitude, longitude from doctor_locations where id in (select doctor_location_id from tokens group by doctor_location_id)')
     results = cursor.fetchall()
     resultsToReturn = []
     for result in results:
