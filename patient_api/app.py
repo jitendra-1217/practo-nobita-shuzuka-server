@@ -34,13 +34,13 @@ def listDoctorLocations():
         resultsToReturn.append({'id':result[0], 'latitude':str(result[1]), 'longitude':str(result[2])})
     return jsonify(status='success',message=resultsToReturn)
 
-@patient_api_bp.route('/details-of-doctor-location', methods=['GET'])
+@patient_api_bp.route('/details-of-doctor-location', methods=['POST'])
 def detailsOfDoctorLocation():
-    cursor.execute('select d.id, d.name, d.phone_no, d.avg_checkup_time, dl.landmark, dl.locality, dl.city, dl.country, dl.latitude, dl.longitude from doctors d right join doctor_locations dl on d.id = dl.doctor_id where dl.id = "%d"' % (int(request.args.get('doctor_location_id'))))
+    cursor.execute('select d.id, d.name, d.phone_no, d.avg_checkup_time, dl.landmark, dl.locality, dl.city, dl.country, dl.latitude, dl.longitude from doctors d right join doctor_locations dl on d.id = dl.doctor_id where dl.id = "%d"' % (int(request.form['doctor_location_id'])))
     result = cursor.fetchone()
-    cursor.execute('select count(*) from tokens where doctor_location_id = "%d" and token_timestamp = "%s"' % (int(request.args.get('doctor_location_id')), request.args.get('token_timestamp')))
+    cursor.execute('select count(*) from tokens where doctor_location_id = "%d" and token_timestamp = "%s"' % (int(request.form['doctor_location_id']), request.form['token_timestamp']))
     totalTokenCount = str(cursor.fetchone()[0])
-    cursor.execute('select count(*) from tokens where doctor_location_id = "%d" and token_timestamp = "%s" and status = "empty"' % (int(request.args.get('doctor_location_id')), request.args.get('token_timestamp')))
+    cursor.execute('select count(*) from tokens where doctor_location_id = "%d" and token_timestamp = "%s" and status = "empty"' % (int(request.form['doctor_location_id']), request.form['token_timestamp']))
     emptyTokenCount = str(cursor.fetchone()[0])
     doctorLocationAddress = []
     for index in range(4,8):
@@ -50,6 +50,6 @@ def detailsOfDoctorLocation():
     resultsToReturn = {'doctor_id':result[0], 'doctor_name':result[1], 'doctor_phone_no':result[2], 'doctor_avg_checkup_time':result[3], 'address':doctorLocationAddress, 'doctor_location_latitude': str(result[8]), 'doctor_location_longitude': str(result[9]), 'total_token_count': totalTokenCount, 'empty_token_count': emptyTokenCount}
     return jsonify(status='success',message=resultsToReturn)
 
-@patient_api_bp.route('/status-of-token')
+@patient_api_bp.route('/status-of-token', methods=['GET'])
 def statusOfToken():
     pass
